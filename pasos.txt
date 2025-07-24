@@ -1,0 +1,109 @@
+// CREAR PROYECTO NPM- NODE
+> npm init
+>package name: (clase-5) api-rest
+>version: (1.0.0)
+>description: Proyecto Api Rest
+>entry point: (index.js)
+test command:
+git repository:
+keywords: tags posibles
+author: Pau
+license: (ISC) // o MIT
+type: (commonjs) // module es otra
+
+Ayuda a crear un JSON con los siguientes datos: Se puede crear directamente el JSON sino:
+
+{
+  "name": "api-rest",
+  "version": "1.0.0",
+  "description": "Proyecto Api Rest",
+  "main": "index.js",   //ENTRY POINT. donde llegan todas las peticiones (con metodos GET/PUT-PATCH/DELETE/POST)
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pau",
+  "license": "MIT",
+  "type": "commonjs"
+}
+
+
+Is this OK? (yes) yes
+
+// FORMA DE CREAR uno por default / config rapida
+ejecuto
+> npm init -y
+lo que hace es crear un package json con valores predeterminados. Le da a todo YES
+
+///
+INSTALO EXPRESS y NODEMON
+> npm i express 
+> npm i -D nodemon   
+*instalo solo modo dev de nodemon para ver cambios de servidor en sincronico
+
+///
+MODIFICO en package: sector Type y Scripts (start y dev)
+
+{
+  "name": "proyecto_final",
+  "version": "1.0.0",
+  "description": "Proyecto final Talento Tech 2025",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Pau",
+  "license": "MIT",
+  "type": "module",
+
+}
+//
+CREO SERVIDOR
+En index.js:
+
+import express from "express";
+const app = express();
+
+app.use(express.json());
+const PORT = 3000;
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+
+//
+ARRANCO SERVER (en modo dev de nodemon)
+> npm run dev
+
+en index.js hago peticion GET que sale desde / (inicio basico), puedo crear todas las rutas q quiera con `/inicio`, `/menu`:
+**
+app.get('/', (req,res) => {
+    res.send("API rest en NODE");
+});
+**
+app.get("/products", (req,res) => {
+	res.json(products); //especifico q es json, puedo usar get.send igual
+});
+**con dato DINAMICO
+app.get("/products/:id", (req,res) => { //forma no practica: "/products/2"
+	const product = products.find( (item) => item.id == req.params.id); // forma no practica : item.id ==2
+	res.json(product);
+});
+//
+INSTALO CORS (middlewares)
+>npm i cors
+en index.js:
+
+import cors from "cors";
+app.use(cors());
+
+//
+INSTALO .ENV
+-para seguridad de credenciales de la base de datos:
+>npm i dotenv  (instalo modulo q nos permite leer archivo .env de variables de entorno)//Se agrega a .gitignore porque son credenciales privadas y se crea archivo .env-example con un ejemplo de como completarlo
+
+//
+INSTALO FIREBASE
+>npm install firebase
+
+// 
+INSTALO JSONWEBTOKEN y BODY-PARSER (o express json)
+> npm i jsonwebtoken
