@@ -1,5 +1,4 @@
 import { Router } from "express";
-import jwt from 'jsonwebtoken';
 import {login} from '../controllers/auth.controller.js'
 
 const router = Router();

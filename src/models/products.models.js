@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+//import fs from 'fs';
+//import path from 'path';
 import { db } from './firebase.js';
-import {collection, getDoc, getDocs, doc } from "firebase/firestore";
+import {collection, getDoc, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
 
@@ -31,17 +31,58 @@ export const getAllProducts = async () => {
 
 export const getProductById = async (id) => {
     try {
-        const docRef = doc(productsCollection, id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
+        const productRef = doc(productsCollection, id); //para un search busco por const q= query(productsCollection,where (field, "==", value)); 
+        const snapshot = await getDoc(productRef); //getDocs(q)
+        if (snapshot.exists()) {
             return { id:docSnap.id, ...docSnap.data()};
         } else {
             return null;
         }
     } catch (error) {
+        console.error(error); //
+    }
+};
+
+export const createProduct = async(newProduct) => {
+    try {
+        const docRef = await addDoc(productsCollection, newProduct);
+        return {id: docRef.id, ...newProduct};
+    } catch (error) {
         console.error(error);
     }
 };
+
+export async function updatedProduct (id,updateProductData)  {
+    try {
+        const productRef =doc(productsCollection, id);
+        const snapshot = await getDoc(productRef);
+        if (!snapshot.exists()) {
+            return false;
+        }
+        await setDoc(productRef,updateProductData, { merge: true }); //merge:put o patch
+        return {id, ...updateProductData};
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+export const deleteProduct = async(id) => {
+    try {
+        const productRef = doc(productsCollection,id);
+        const snapshot = await getDoc(productRef);
+        if (!snapshot.exists()) {
+            return false;
+        }
+        await deleteDoc(productRef);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+
+/*
 
 export const postProduct = (data) => { //es cmo poner (name,price)
    // console.log({...data});
@@ -55,3 +96,7 @@ export const postProduct = (data) => { //es cmo poner (name,price)
     fs.writeFileSync(filePath, JSON.stringify(products) ); //guardo en el texto el objeto de java product pasado a json.
     return newProduct;
 };
+
+
+
+*/

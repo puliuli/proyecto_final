@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken';
 
 const default_user = {
     id : 1,
-    email:"prueba@email.com",
+    email:"user@email.com",
     password:"strongPass123",
 };
 
-export const login = async (req,res) => {
+export const login = (req,res) => {
     const {email, password} = req.body;
     const user = {id :1, email};
 

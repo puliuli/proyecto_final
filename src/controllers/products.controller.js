@@ -10,6 +10,51 @@ export const getAllProducts = async (req,res) => {
     //res.json(services.getAllProducts()); //referencia de products de services
 };
 
+
+export const getProductById = async (req,res) => {
+    const { id } = req.params; 
+    const product = await model.getProductById(id);
+    if (!product) {
+        res.status(404).json( {error : "No existe el producto" });
+    }
+    res.json(product);
+};
+
+
+export const createProduct = async(req,res) => {
+    const newProduct = req.body; // OTRA forma: const { name, price, categories } = req.body;
+    const createdProduct = await model.createProduct(newProduct); //model.createProduct({ name, price, categories });
+    res.status(201).json(createdProduct);
+};
+
+export const updateProduct = async(req,res) => {
+    const {id} = req.params;
+    const updatedProductData = req.body;
+
+    const updatedProduct = await model.updateProduct(id,updatedProductData);
+
+    if(updatedProduct) {
+        res.json(updatedProduct);
+    } else {
+        res.status(404).json({message: "Producto no encontrado"});
+    }
+};
+
+export const deleteProduct = async (req, res) => {
+  const productId = req.params.id;
+  console.log(productId);
+
+  const product = await model.deleteProduct(productId);
+
+  if (!product) {
+    return res.status(404).json({ error: "Producto no encontrado" });
+  }
+
+  res.status(204).send();
+};
+
+/*
+
 export const searchProduct = (req,res) => {
     const {name} = req.query;
 
@@ -21,15 +66,6 @@ export const searchProduct = (req,res) => {
     res.json(filteredProducts);
 }
 
-export const getProductById = async (req,res) => {
-    const { id } = req.params;
-    const product = await model.getProductById(id);
-    if (!product) {
-        res.status(404).json( {error : "No existe el producto" });
-    }
-    res.json(product);
-};
-
 export const postProduct = (req,res) => {
     const { name, price } = req.body;
     const newProduct = model.postProduct({name,price});
@@ -37,3 +73,7 @@ export const postProduct = (req,res) => {
     res.status(201).json(newProduct);
 
 };
+
+
+
+*/

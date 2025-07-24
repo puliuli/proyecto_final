@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { getAllProducts, getProductById, postProduct, searchProduct } from "../controllers/products.controller.js";
+import { getAllProducts, getProductById, updateProduct, createProduct, deleteProduct } from "../controllers/products.controller.js";
 import {auth} from "../middlewares/auth.middleware.js"
 const router = Router();
 
@@ -12,11 +12,22 @@ const products = [
 ];
 */
 router.get("/products",getAllProducts);
-router.get("products/search", searchProduct);
+//router.get("products/search", searchProduct);
 router.get("/products/:id", getProductById );
 
-router.post("/products", auth, postProduct );
-router.put('/products/:id', (req,res) => {
+router.post("/products", auth, createProduct );
+
+router.put("/products/:id", updateProduct);
+
+router.delete("/products/:id", deleteProduct);
+
+export default router;
+
+
+
+
+
+/* router.put('/products/:id', (req,res) => {
     const productId = parseInt(req.params.id,10);
     const productIndex = products.findIndex((p) => p.id === productId);
 
@@ -43,5 +54,4 @@ router.delete('/products/:id', auth , (req,res) =>{
    
 });
 
-
-export default router;
+*/
