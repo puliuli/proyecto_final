@@ -1,6 +1,7 @@
 import {Router} from "express";
-import { getAllProducts, getProductById, updateProduct, createProduct, deleteProduct, createProduct2 } from "../controllers/products.controller.js";
+import { getAllProducts, getProductById, createProduct, deleteProduct, updatedProduct } from "../controllers/products.controller.js";
 import {auth} from "../middlewares/auth.middleware.js"
+import { patchProduct } from "../models/products.models.js";
 const router = Router();
 
 /** 
@@ -11,17 +12,16 @@ const products = [
     { id: 4, nombre: "nombre4" , precio:40 },
 ];
 */
-router.get("/products",getAllProducts);
+router.get("/products", getAllProducts);
 //router.get("products/search", searchProduct);
 router.get("/products/:id", getProductById );
 
 router.post("/products", auth, createProduct );
-router.post("/crear", createProduct2 );
 
+router.put("/products/:id",auth, patchProduct);
+router.put("/products/:id",auth, updatedProduct);
 
-router.put("/products/:id", updateProduct);
-
-router.delete("/products/:id", deleteProduct);
+router.delete("/products/:id",auth, deleteProduct);
 
 export default router;
 

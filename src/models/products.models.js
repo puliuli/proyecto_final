@@ -4,22 +4,19 @@ import { db } from './firebase.js';
 import {collection, getDoc, getDocs, doc, setDoc,addDoc, deleteDoc } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
-
+//de todo lo de db busca solo productos.
 
 const __dirname = import.meta.dirname;
-
 const filePath = path.join(__dirname, "./products.json");
-
 const json = fs.readFileSync(filePath, 'utf-8');  
-
 const products = JSON.parse(json);
-console.log(products);
+//console.log(products);
 
-export const getAllProducts = async () => {
-    try {
-        const snapshot = await getDocs(productsCollection); //saca una "foto"
-        const products =snapshot.docs.map((doc) => ({  //por cada doc trae id y dato
-            id: doc.id,
+export const getAllProducts = async () => { //async usa .then /catch o await
+    try { //puede fallar pq las credenciales se vencieron por ejemplo
+        const snapshot = await getDocs(productsCollection); //el await espera que se conecte a firebase, y getDocs trae todo los prod y saca una "foto". 
+        const products =snapshot.docs.map((doc) => ({  //mapeo y recorro todo los documentos
+            id: doc.id, //por cada doc trae id y dato. genera un array con todo los documentos q tengo en la coleccion
             ...doc.data(),
         }));
         return products;   //genera un array de products
@@ -30,6 +27,14 @@ export const getAllProducts = async () => {
     
 };
 
+/*
+doc-->trae REFERENCIA
+getDoc-->trae UN documento a partir de referencia (ID)
+getDocs-->trae TODOS los documentos
+addDoc-->agrega NUEVO documento
+deleteDoc-->obtiene referencia a un doc especifico para eliminarlo
+setDoc-->Reemplazar data (piso referencia completa)
+*/
 export const getProductById = async (id) => {
     try {
         const productRef = doc(productsCollection, id); //para un search busco por const q= query(productsCollection,where (field, "==", value)); 
@@ -56,15 +61,16 @@ return newProduct;
 };
 
 export const createProduct = async(newProduct) => { //otra forma
-    try {
-        const docRef = await addDoc(productsCollection, newProduct);
-        return {id: docRef.id, ...newProduct};
+    try { // addDoc(que coleccion, que cosa queres guardar)
+        const docRef = await addDoc(productsCollection, newProduct); //crea objeto con la fata nueva
+        return {id: docRef.id, ...newProduct};//veo lo q cree
     } catch (error) {
         console.error(error);
     }
 };
 
-export async function updatedProduct (id,updatedProductData)  {
+//patch
+export async function patchProduct (id,updatedProductData)  {
     try {
         const productRef =doc(productsCollection, id);
         const snapshot = await getDoc(productRef);
@@ -78,15 +84,30 @@ export async function updatedProduct (id,updatedProductData)  {
         return null;
     }
 };
-
-export const deleteProduct = async(id) => {
+export async function updatedProduct (id,updatedProductData)  {
     try {
-        const productRef = doc(productsCollection,id);
+        const productRef =doc(productsCollection, id);
         const snapshot = await getDoc(productRef);
         if (!snapshot.exists()) {
             return false;
         }
-        await deleteDoc(productRef)
+        await setDoc(productRef,updatedProductData); 
+        return {id, ...updatedProductData};
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+
+export const deleteProduct = async(id) => {
+    try {
+        const productRef = doc(productsCollection,id); //busco por referencia (id)
+        const snapshot = await getDoc(productRef);
+        if (!snapshot.exists()) { //chequeo si existe
+            return false; //si no existe retorna falso
+        }
+        await deleteDoc(productRef) //si existe lo elimina
         return true;
     } catch (error) {
         console.error(error);

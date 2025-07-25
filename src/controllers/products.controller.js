@@ -31,7 +31,7 @@ export const createProduct = async(req,res) => {
     const createdProduct = await model.createProduct(newProduct); //model.createProduct({ name, price, categories });
     res.status(201).json(createdProduct);
 };
-
+//otra forma:
 export const createProduct2 = async (req, res) => {
   const { name, price, categories } = req.body;
 
@@ -55,8 +55,22 @@ export const updatedProduct = async(req,res) => {
     }
 };
 
+export const patchProduct = async(req,res) => {
+    const {id} = req.params;
+    const patchProductData = req.body;
+
+    const patchProduct = await model.patchProduct(id,patchProductData);
+
+    if(patchProduct) {
+        res.json(patchProduct);
+    } else {
+        res.status(404).json({message: "Producto no encontrado"});
+    }
+};
+
+
 export const deleteProduct = async (req, res) => {
-  const productId = req.params.id;
+  const productId = req.params.id; // si fuese SOLO numerico puedo parseInt()
   console.log(productId);
 
   const product = await model.deleteProduct(productId);
@@ -64,7 +78,6 @@ export const deleteProduct = async (req, res) => {
   if (!product) {
     return res.status(404).json({ error: "Producto no encontrado" });
   }
-
   res.status(204).send();
 };
 
