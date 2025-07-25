@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { getAllProducts, getProductById, updateProduct, createProduct, deleteProduct } from "../controllers/products.controller.js";
+import { getAllProducts, getProductById, updateProduct, createProduct, deleteProduct, createProduct2 } from "../controllers/products.controller.js";
 import {auth} from "../middlewares/auth.middleware.js"
 const router = Router();
 
@@ -16,6 +16,8 @@ router.get("/products",getAllProducts);
 router.get("/products/:id", getProductById );
 
 router.post("/products", auth, createProduct );
+router.post("/crear", createProduct2 );
+
 
 router.put("/products/:id", updateProduct);
 

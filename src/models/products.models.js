@@ -1,11 +1,11 @@
-//import fs from 'fs';
-//import path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { db } from './firebase.js';
 import {collection, getDoc, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
 
-/*
+
 const __dirname = import.meta.dirname;
 
 const filePath = path.join(__dirname, "./products.json");
@@ -14,7 +14,7 @@ const json = fs.readFileSync(filePath, 'utf-8');
 
 const products = JSON.parse(json);
 console.log(products);
-*/
+
 export const getAllProducts = async () => {
     try {
         const snapshot = await getDocs(productsCollection); //saca una "foto"
@@ -43,7 +43,18 @@ export const getProductById = async (id) => {
     }
 };
 
-export const createProduct = async(newProduct) => {
+//con base de datos internas:
+export const createProduct2 = async(data) => { 
+const newProduct = {
+    id: products.length + 1,
+    ...data,
+};
+products.push(newProduct);
+fs.writeFileSync(jsonPath, JSON.stringify(products)); //gardo
+return newProduct;
+};
+
+export const createProduct = async(newProduct) => { //otra forma
     try {
         const docRef = await addDoc(productsCollection, newProduct);
         return {id: docRef.id, ...newProduct};
@@ -74,7 +85,7 @@ export const deleteProduct = async(id) => {
         if (!snapshot.exists()) {
             return false;
         }
-        await deleteDoc(productRef);
+        await deleteDoc(productRef)
         return true;
     } catch (error) {
         console.error(error);
@@ -97,6 +108,17 @@ export const postProduct = (data) => { //es cmo poner (name,price)
     return newProduct;
 };
 
+
+export const deleteProduct2 = (id) => {
+    const productIndex = products.findIndex((p) => p.id === id);  // === comprara VALOR Y TIPO
+    if(productIndex == -1) {  // == compara VALOR
+    return null;
+    } else {
+        const product = products.splice(productIndez, 1);
+        fs.writeFileSync(jsonPath, JSON.stringify(products));
+        return product;
+        }
+    };
 
 
 */
