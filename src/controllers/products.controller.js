@@ -46,10 +46,10 @@ export const updatedProduct = async(req,res) => {
     const {id} = req.params;
     const updatedProductData = req.body;
 
-    const updatedProduct = await model.updatedProduct(id,updatedProductData);
+    const uProduct = await model.updatedProduct(id,updatedProductData);
 
-    if(updatedProduct) {
-        res.json(updatedProduct);
+    if(uProduct) {
+        res.json(uProduct);
     } else {
         res.status(404).json({message: "Producto no encontrado"});
     }

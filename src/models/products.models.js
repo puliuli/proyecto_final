@@ -40,12 +40,14 @@ export const getProductById = async (id) => {
         const productRef = doc(productsCollection, id); //para un search busco por const q= query(productsCollection,where (field, "==", value)); 
         const snapshot = await getDoc(productRef); //getDocs(q)
         if (snapshot.exists()) {
-            return { id:docSnap.id, ...snapshot.data()};
+            return { id:snapshot.id, ...snapshot.data()};
         } else {
+            res.status(404).json({error: "Producto no encontrado"});
             return null;
         }
     } catch (error) {
         console.error(error); //
+        throw new error("Error al obtener producto");
     }
 };
 

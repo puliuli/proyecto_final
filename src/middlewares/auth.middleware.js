@@ -7,7 +7,7 @@ export const auth = (req,res, next) => {
     if (!token) return res.sendStatus(401); //corta con return si no es token valido
     
     jwt.verify(token, process.env.JWT_SECRET, (err) => {
-        if(err) return req.sendStatus(403);
+        if(err) return res.sendStatus(403);
         next();
     });
     
