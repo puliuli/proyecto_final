@@ -5,9 +5,13 @@
 import * as model from '../models/products.models.js';
 
 export const getAllProducts = async (req,res) => {
-    const products = await model.getAllProducts();
-    //return await model.getAllProducts();
-    res.json(products);
+    try {
+        const products = await model.getAllProducts();
+        res.json(products);
+    } catch (error){
+        res.status(500).json({error: error.message});
+    }
+
     //res.json(services.getAllProducts()); //referencia de products de services
 };
 
@@ -38,11 +42,11 @@ export const createProduct2 = async (req, res) => {
 
 
 
-export const updateProduct = async(req,res) => {
+export const updatedProduct = async(req,res) => {
     const {id} = req.params;
     const updatedProductData = req.body;
 
-    const updatedProduct = await model.updateProduct(id,updatedProductData);
+    const updatedProduct = await model.updatedProduct(id,updatedProductData);
 
     if(updatedProduct) {
         res.json(updatedProduct);

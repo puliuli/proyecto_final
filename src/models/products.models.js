@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { db } from './firebase.js';
-import {collection, getDoc, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
+import {collection, getDoc, getDocs, doc, setDoc,addDoc, deleteDoc } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
 
@@ -25,6 +25,7 @@ export const getAllProducts = async () => {
         return products;   //genera un array de products
     } catch (error) { //si falla(no hay internet-no tengo permisos) Hago un catch
         console.error(error);
+        throw new Error("Error con conexion con Firestore");
     }
     
 };
@@ -34,7 +35,7 @@ export const getProductById = async (id) => {
         const productRef = doc(productsCollection, id); //para un search busco por const q= query(productsCollection,where (field, "==", value)); 
         const snapshot = await getDoc(productRef); //getDocs(q)
         if (snapshot.exists()) {
-            return { id:docSnap.id, ...docSnap.data()};
+            return { id:docSnap.id, ...snapshot.data()};
         } else {
             return null;
         }
@@ -63,15 +64,15 @@ export const createProduct = async(newProduct) => { //otra forma
     }
 };
 
-export async function updatedProduct (id,updateProductData)  {
+export async function updatedProduct (id,updatedProductData)  {
     try {
         const productRef =doc(productsCollection, id);
         const snapshot = await getDoc(productRef);
         if (!snapshot.exists()) {
             return false;
         }
-        await setDoc(productRef,updateProductData, { merge: true }); //merge:put o patch
-        return {id, ...updateProductData};
+        await setDoc(productRef,updatedProductData, { merge: true }); //merge:put o patch
+        return {id, ...updatedProductData};
     } catch (error) {
         console.error(error);
         return null;

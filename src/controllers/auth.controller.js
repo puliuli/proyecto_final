@@ -15,11 +15,10 @@ export const login = (req,res) => {
         const expiration = {expiresIn: "3h"}; //depende del sistema cuando expira
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, expiration);
-        res.json({token});
+        return res.json({token});
     } else {
         return res.sendStatus(401).json({error : 'No coinciden sus credenciales'});
     }
 
-    res.json({message : "ok"});
 };
 
