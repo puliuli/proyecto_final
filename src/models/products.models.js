@@ -1,17 +1,17 @@
-import fs from 'fs';
-import path from 'path';
+//import fs from 'fs';
+//import path from 'path';
 import { db } from './firebase.js';
 import {collection, getDoc, getDocs, doc, setDoc,addDoc, deleteDoc } from "firebase/firestore";
 
 const productsCollection = collection(db, "products");
 //de todo lo de db busca solo productos.
-
+/*
 const __dirname = import.meta.dirname;
 const filePath = path.join(__dirname, "./products.json");
 const json = fs.readFileSync(filePath, 'utf-8');  
 const products = JSON.parse(json);
 //console.log(products);
-
+*/
 export const getAllProducts = async () => { //async usa .then /catch o await
     try { //puede fallar pq las credenciales se vencieron por ejemplo
         const snapshot = await getDocs(productsCollection); //el await espera que se conecte a firebase, y getDocs trae todo los prod y saca una "foto". 
